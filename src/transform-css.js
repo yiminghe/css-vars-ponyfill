@@ -53,6 +53,8 @@ function transformCss(cssData, options = {}) {
         cssData = parseCss(cssData, settings);
     }
 
+    settings.variables = Object.assign({}, settings.variables);
+
     // Resolve variables
     walkCss(cssData.stylesheet, function(declarations, node) {
         for (let i = 0; i < declarations.length; i++) {
@@ -64,6 +66,10 @@ function transformCss(cssData, options = {}) {
             // Skip comments
             if (type !== 'declaration') {
                 continue;
+            }
+
+            if(prop.indexOf(VAR_PROP_IDENTIFIER) === 0){
+                settings.variables[prop] = value;
             }
 
             // Remove custom property declarations
